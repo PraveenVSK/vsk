@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Details</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #e9ecef;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .dashboard {
+      display: flex;
+      flex-direction: row;
+      padding: 20px;
+      max-width: 1000px;
+      width: 100%;
+      background-color: #aad8fd;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .left-panel {
+      width: 35%;
+      padding: 15px;
+      border-right: 2px solid #0022ff;
+      background-color: #ffffff;
+    }
+
+    .left-panel img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      border: 2px solid #dee2e6;
+    }
+
+    .left-panel .details {
+      margin-top: 15px;
+    }
+
+    .left-panel .details p {
+      margin: 8px 0;
+      font-size: 16px;
+      line-height: 1.4;
+    }
+
+    .right-panel {
+      width: 65%;
+      padding: 15px;
+    }
+
+    .right-panel h2 {
+      margin-bottom: 15px;
+      font-size: 24px;
+      color: #2a2d30;
+      border-bottom: 2px solid #dee2e6;
+      padding-bottom: 10px;
+    }
+
+    .excel-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    .excel-table th, .excel-table td {
+      border: 1px solid #dee2e6;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+      background-color: #ffffff;
+    }
+
+    .excel-table th {
+      background-color: #87c0f8;
+      color: #212529;
+    }
+
+    .excel-table td {
+      color: #495057;
+    }
+
+    .excel-table .month {
+      text-align: left;
+      background-color: #f8f9fa;
+      font-weight: bold;
+    }
+
+    .button-container {
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .redirect-button {
+      padding: 8px 16px;
+      font-size: 14px;
+      color: #ffffff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .redirect-button:hover {
+      background-color: #0056b3;
+    }
+
+    .update-container {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #dee2e6;
+    }
+
+    .update-container select, .update-container input {
+      padding: 8px;
+      margin-right: 5px;
+      margin-bottom: 8px;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+    }
+
+    .update-button {
+      padding: 8px 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .update-button:hover {
+      background-color: #0056b3;
+    }
+
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .popup-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .popup-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .popup-header svg {
+      margin-right: 10px;
+      color: #dc3545;
+    }
+
+    .popup-header h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .popup-message {
+      margin-bottom: 15px;
+    }
+
+    .popup-footer {
+      text-align: right;
+    }
+
+    .close-button {
+      padding: 8px 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .close-button:hover {
+      background-color: #0056b3;
+    }
+
+    .prescription-upload {
+      margin-top: 15px;
+      padding: 10px;
+      border: 1px dashed #007bff;
+      border-radius: 5px;
+      background-color: #f0f7ff;
+      display: none;
+    }
+
+    .prescription-upload.show {
+      display: block;
+    }
+
+    .prescription-upload p {
+      margin: 5px 0;
+      font-size: 14px;
+      color: #495057;
+    }
+
+    .upload-btn-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    .upload-btn {
+      padding: 8px 16px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .upload-btn:hover {
+      background-color: #218838;
+    }
+
+    .upload-btn-wrapper input[type=file] {
+      font-size: 100px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .prescription-status {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .prescription-status.approved {
+      color: #28a745;
+    }
+
+    .prescription-status.rejected {
+      color: #dc3545;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <div class="left-panel">
+      <img id="user-photo" src="https://via.placeholder.com/300" alt="Person's Photo">
+      <div class="details">
+        <p><strong>ID:</strong> <span id="user-id"></span></p>
+        <p><strong>Name:</strong> <span id="user-name"></span></p>
+        <p><strong>Age:</strong> <span id="user-age"></span></p>
+        <p><strong>Blood Group:</strong> <span id="user-bloodGroup"></span></p>
+        <p><strong>Aadhar Number:</strong> <span id="user-phoneNumber"></span></p>
+        <p><strong>State:</strong> <span id="user-state"></span></p>
+        <span id="age-status"></span>
+        <br>
+        <span id="elderly-status"></span>
+        <div id="prescription-upload" class="prescription-upload">
+          <p>Please upload medical prescription to verify eligibility:</p>
+          <div class="upload-btn-wrapper">
+            <button class="upload-btn">Upload Prescription</button>
+            <input type="file" id="prescription-file" accept=".pdf" />
+          </div>
+          <div id="prescription-status" class="prescription-status"></div>
+        </div>
+        <br>
+        <span id="alcohol-status"></span>
+        <br>
+        <span id="consumption-status"></span>
+
+        <div class="update-container">
+          <div>
+            <select id="month-select">
+              <option value="jan">January</option>
+              <option value="feb">February</option>
+              <option value="mar">March</option>
+              <option value="apr">April</option>
+              <option value="may">May</option>
+              <option value="jun">June</option>
+              <option value="jul">July</option>
+              <option value="aug" selected>August</option>
+              <option value="sep">September</option>
+            </select>
+            <select id="week-select">
+              <option value="w1">Week 1</option>
+              <option value="w2">Week 2</option>
+              <option value="w3">Week 3</option>
+              <option value="w4">Week 4</option>
+            </select>
+          </div>
+          <div>
+            <input type="number" id="update-value" placeholder="Enter bottles (1-3)" min="1" max="3">
+            <button class="update-button" onclick="updateConsumption()">Update</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <h2>Monthly Activity Overview</h2>
+      <p>The limitation of every month is: 12 bottle</p>
+      <p>The limitation of every week is: 3 bottle</p>
+
+      <table class="excel-table">
+        <tr>
+          <th>Month</th>
+          <th>Week 1</th>
+          <th>Week 2</th>
+          <th>Week 3</th>
+          <th>Week 4</th>
+        </tr>
+        <tr>
+          <td class="month">January</td>
+          <td id="jan-w1"></td>
+          <td id="jan-w2"></td>
+          <td id="jan-w3"></td>
+          <td id="jan-w4"></td>
+        </tr>
+        <tr>
+          <td class="month">February</td>
+          <td id="feb-w1"></td>
+          <td id="feb-w2"></td>
+          <td id="feb-w3"></td>
+          <td id="feb-w4"></td>
+        </tr>
+        <tr>
+          <td class="month">March</td>
+          <td id="mar-w1"></td>
+          <td id="mar-w2"></td>
+          <td id="mar-w3"></td>
+          <td id="mar-w4"></td>
+        </tr>
+        <tr>
+          <td class="month">April</td>
+          <td id="apr-w1"></td>
+          <td id="apr-w2"></td>
+          <td id="apr-w3"></td>
+          <td id="apr-w4"></td>
+        </tr>
+        <tr>
+          <td class="month">May</td>
+          <td id="may-w1"></td>
+          <td id="may-w2"></td>
+          <td id="may-w3"></td>
+          <td id="may-w4"></td>
+        </tr>
+        <tr>
+          <td class="month">June</td>
+          <td id="jun-w1"></td>
+          <td id="jun-w2"></td>
+          <td id="jun-w3"></td>
+          <td id="jun-w4"></td>
+        </tr>
+        <tr>
+          <td class="month">July</td>
+          <td id="jul-w1"></td>
+          <td id="jul-w2"></td>
+          <td id="jul-w3"></td>
+          <td id="jul-w4"></td>
+        </tr>
+        <tr>
+          <td class="month">August</td>
+          <td id="aug-w1"></td>
+          <td id="aug-w2"></td>
+          <td id="aug-w3"></td>
+          <td id="aug-w4"></td>
+        </tr>
+        <tr>
+          <td class="month">September</td>
+          <td id="sep-w1"></td>
+          <td id="sep-w2"></td>
+          <td id="sep-w3"></td>
+          <td id="sep-w4"></td>
+        </tr>
+      </table>
+      
+      <!-- Button to redirect to login page -->
+      <div class="button-container">
+        <button class="redirect-button" onclick="redirectToLogin()">Go to Login Page</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup Message -->
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <div class="popup-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <h3 id="popup-title">Alert</h3>
+      </div>
+      <div class="popup-message" id="popup-message"></div>
+      <div class="popup-footer">
+        <button class="close-button" onclick="closePopup()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Sample data list with all 8 users
+    const dataList = [
+      { name: 'Praveen', id: '1234', bloodGroup: 'O+', phoneNumber: '125678938980', age: '25', state: 'Tamil Nadu', 
+        photo: 'https://img.etimg.com/thumb/msid-75194748,width-640,height-480,imgsize-300190,resizemode-4/anchor-beard.jpg', 
+        jan: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        feb: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        mar: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        apr: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        may: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        jun: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        jul: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        aug: {w1: '0', w2: '0', w3: '0', w4: '0'},
+        sep: {w1: '0', w2: '0', w3: '0', w4: '0'},
+        prescriptionApproved: false
+      },
+      { name: 'Jane Smith', id: '5678', bloodGroup: 'A-', phoneNumber: '258702547109', age: '65', state: 'Tamil Nadu', 
+        photo: 'https://a.espncdn.com/combiner/i?img=/i/headshots/soccer/players/full/285629.png&w=350&h=254', 
+        jan: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        feb: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        mar: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        apr: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        may: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        jun: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        jul: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        aug: {w1: '0', w2: '0', w3: '0', w4: '0'},
+        sep: {w1: '0', w2: '0', w3: '0', w4: '0'},
+        prescriptionApproved: false
+      },
+      { name: 'Jon', id: '5588', bloodGroup: 'B-', phoneNumber: '782277774451', age: '30', state: 'Tamil Nadu', 
+        photo: 'https://media.istockphoto.com/id/1392990621/photo/smart-handsome-positive-indian-or-arabian-guy-with-glasses-in-casual-wear-student-or.jpg?s=2048x2048&w=is&k=20&c=FYklnJ34SEXccfiXVE0RYv22ie1HhcCePUTv7T0PCS8=', 
+        jan: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        feb: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        mar: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        apr: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        may: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        jun: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        jul: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        aug: {w1: '0', w2: '0', w3: '0', w4: '0'},
+        sep: {w1: '0', w2: '0', w3: '0', w4: '0'},
+        prescriptionApproved: false
+      },
+      { name: 'Santhosh', id: '338', bloodGroup: 'A+', phoneNumber: '985728301830', age: '62', state: 'Tamil Nadu', 
+        photo: 'https://www.travelvisapro.com/wp-content/uploads/2023/05/Facial-Hair-in-Passport-Photo.jpg', 
+        jan: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        feb: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        mar: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        apr: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        may: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        jun: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        jul: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        aug: {w1: '0', w2: '0', w3: '0', w4: '0'},
+        sep: {w1: '0', w2: '0', w3: '0', w4: '0'},
+        prescriptionApproved: false
+      },
+      { name: 'Rafael', id: '318', bloodGroup: 'B+', phoneNumber: '987654321234', age: '23', state: 'Tamil Nadu', 
+        photo: 'https://i.shgcdn.com/8fec0c30-2420-4a45-9ceb-042a337e16d7/-/format/auto/-/preview/3000x3000/-/quality/lighter/', 
+        jan: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        feb: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        mar: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        apr: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        may: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        jun: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        jul: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        aug: {w1: '0', w2: '0', w3: '0', w4: '0'},
+        sep: {w1: '0', w2: '0', w3: '0', w4: '0'},
+        prescriptionApproved: false
+      },
+      { name: 'Murali', id: '291', bloodGroup: 'A-', phoneNumber: '987865342457', age: '20', state: 'Tamil Nadu', 
+        photo: 'https://png.pngtree.com/png-vector/20230928/ourmid/pngtree-young-indian-man-png-image_10149659.png', 
+        jan: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        feb: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        mar: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        apr: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        may: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        jun: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        jul: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        aug: {w1: '0', w2: '0', w3: '0', w4: '0'},
+        sep: {w1: '0', w2: '0', w3: '0', w4: '0'},
+        prescriptionApproved: false
+      },
+      { name: 'Rajesh', id: '325', bloodGroup: 'B+', phoneNumber: '345654345678', age: '27', state: 'Tamil Nadu', 
+        photo: 'https://i.pinimg.com/474x/84/fb/3b/84fb3b82c7de88656e6ea770bec71b3e.jpg', 
+        jan: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        feb: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        mar: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        apr: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        may: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        jun: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        jul: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        aug: {w1: '0', w2: '0', w3: '0', w4: '0'},
+        sep: {w1: '0', w2: '0', w3: '0', w4: '0'},
+        prescriptionApproved: false
+      },
+      { name: 'Naren', id: '295', bloodGroup: 'O+', phoneNumber: '345610986327', age: '16', state: 'Tamil Nadu', 
+        photo: 'https://media.istockphoto.com/id/1336063208/photo/single-portrait-of-smiling-confident-male-student-teenager-looking-at-camera-in-library.jpg?s=612x612&w=0&k=20&c=w9SCRRCFa-Li82fmZotJzHdGGWXBVN7FgfBCD5NK7ic=', 
+        jan: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        feb: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        mar: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        apr: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        may: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        jun: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        jul: {w1: '0', w2: '0', w3: '0', w4: '0'}, 
+        aug: {w1: '3', w2: '3', w3: '0', w4: '2'},
+        sep: {w1: '0', w2: '0', w3: '0', w4: '0'},
+        prescriptionApproved: false
+      }
+    ];
+
+    // Sample prescription content for simulation
+    const prescriptionContents = {
+      goodHealth: [
+        "Patient is in good health condition",
+        "No contraindications for moderate alcohol consumption",
+        "Regular checkup shows normal liver function",
+        "Blood pressure within normal range",
+        "Approved for moderate alcohol consumption"
+      ],
+      badHealth: [
+        "Patient has elevated liver enzymes",
+        "History of hypertension",
+        "Medication contraindicated with alcohol",
+        "Not recommended for alcohol consumption",
+        "Alcohol consumption may worsen existing conditions"
+      ]
+    };
+
+    // Get the user ID from URL parameter or localStorage
+    function getUserId() {
+      // First try to get from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const idFromUrl = urlParams.get('id');
+      
+      if (idFromUrl) {
+        return idFromUrl;
+      }
+      
+      // If not in URL, try localStorage
+      const idFromStorage = localStorage.getItem('userID');
+      if (idFromStorage) {
+        return idFromStorage;
+      }
+      
+      // Default to first user if no ID found
+      return '1234';
+    }
+
+    // Get current user ID and find user
+    const currentUserId = getUserId();
+    let currentUser = dataList.find(user => user.id === currentUserId);
+
+    // Initialize the page
+    function initPage() {
+      if (currentUser) {
+        document.getElementById('user-id').textContent = currentUser.id;
+        document.getElementById('user-name').textContent = currentUser.name;
+        document.getElementById('user-age').textContent = currentUser.age;
+        document.getElementById('user-bloodGroup').textContent = currentUser.bloodGroup;
+        document.getElementById('user-phoneNumber').textContent = currentUser.phoneNumber;
+        document.getElementById('user-photo').src = currentUser.photo;
+        document.getElementById('user-state').textContent = currentUser.state;
+
+        // Update all table cells
+        updateTableCells();
+        
+        // Update status messages
+        updateStatusMessages();
+      } else {
+        document.querySelector('.left-panel .details').innerHTML = '<p>User not found.</p>';
+      }
+    }
+
+    // Update all table cells with current data
+    function updateTableCells() {
+      const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep'];
+      const weeks = ['w1', 'w2', 'w3', 'w4'];
+      
+      months.forEach(month => {
+        weeks.forEach(week => {
+          const cellId = `${month}-${week}`;
+          document.getElementById(cellId).textContent = currentUser[month][week];
+        });
+      });
+    }
+
+    // Update status messages
+    function updateStatusMessages() {
+      // Age status for underage
+      const ageStatus = document.getElementById('age-status');
+      if (parseInt(currentUser.age) < 18) {
+        ageStatus.textContent = "NOTE: The Person is underage, Do not provide alcohol.";
+        ageStatus.style.color = "red";
+      } else {
+        ageStatus.textContent = "";
+      }
+
+      // Age status for elderly (60+)
+      const elderlyStatus = document.getElementById('elderly-status');
+      const prescriptionUpload = document.getElementById('prescription-upload');
+      
+      if (parseInt(currentUser.age) >= 60) {
+        if (currentUser.prescriptionApproved) {
+          elderlyStatus.textContent = "NOTE: Medical prescription verified. Approved for alcohol purchase.";
+          elderlyStatus.style.color = "green";
+          prescriptionUpload.classList.add('show');
+          document.getElementById('prescription-status').textContent = "Prescription Approved";
+          document.getElementById('prescription-status').className = "prescription-status approved";
+        } else {
+          elderlyStatus.textContent = "NOTE: The person is above 60, Needs a prescription from a medical practitioner.";
+          elderlyStatus.style.color = "orange";
+          prescriptionUpload.classList.add('show');
+        }
+      } else {
+        elderlyStatus.textContent = "";
+        prescriptionUpload.classList.remove('show');
+      }
+
+      // Get current month and check alcohol status
+      const monthSelect = document.getElementById('month-select');
+      const currentMonth = monthSelect.value;
+      
+      // Calculate total for the current month
+      const month = currentUser[currentMonth];
+      const monthlyTotal = Object.values(month).reduce((sum, val) => sum + parseInt(val || '0'), 0);
+      
+      // Alcohol status
+      const alcoholStatus = document.getElementById('alcohol-status');
+      if (monthlyTotal >= 12) {
+        alcoholStatus.textContent = "NOTE: The person has reached the monthly limit, Do not provide alcohol";
+        alcoholStatus.style.color = "red";
+      } else {
+        alcoholStatus.textContent = "";
+      }
+    }
+
+    // Function to update alcohol consumption
+    function updateConsumption() {
+      const monthSelect = document.getElementById('month-select');
+      const weekSelect = document.getElementById('week-select');
+      const updateValueInput = document.getElementById('update-value');
+      
+      const currentMonth = monthSelect.value;
+      const currentWeek = weekSelect.value;
+      const updateValue = updateValueInput.value.trim();
+
+      if (!updateValue) {
+        showPopup("Please enter a value");
+        return;
+      }
+
+      const value = parseInt(updateValue);
+      if (isNaN(value) || value <= 0) {
+        showPopup("Please enter a valid positive number");
+        return;
+      }
+
+      // Check age restriction for underage
+      if (parseInt(currentUser.age) < 18) {
+        showPopup("Cannot provide alcohol to underage person");
+        return;
+      }
+
+      // Check age restriction for elderly (60+)
+      if (parseInt(currentUser.age) >= 60 && !currentUser.prescriptionApproved) {
+        showPopup("The person is above 60 and needs an approved medical prescription");
+        return;
+      }
+
+      // Check monthly limit
+      const month = currentUser[currentMonth];
+      const monthlyTotal = Object.values(month).reduce((sum, val) => sum + parseInt(val || '0'), 0);
+      
+      if (monthlyTotal + value > 12) {
+        showPopup("Monthly limit exceeded. Cannot provide more alcohol");
+        return;
+      }
+
+      // Check weekly limit
+      const weekValue = parseInt(currentUser[currentMonth][currentWeek] || '0');
+      if (weekValue + value > 3) {
+        showPopup("Weekly limit exceeded. Cannot provide more alcohol");
+        return;
+      }
+
+      // Update the consumption
+      currentUser[currentMonth][currentWeek] = (weekValue + value).toString();
+      
+      // Update the table cell
+      const cellId = `${currentMonth}-${currentWeek}`;
+      document.getElementById(cellId).textContent = currentUser[currentMonth][currentWeek];
+      
+      // Clear input
+      updateValueInput.value = '';
+      
+      // Update status messages
+      updateStatusMessages();
+      
+      // Show success message
+      showPopup("Consumption updated successfully", true);
+    }
+
+    // Function to show popup
+    function showPopup(message, isSuccess = false) {
+      const popup = document.getElementById('popup');
+      const popupTitle = document.getElementById('popup-title');
+      const popupMessage = document.getElementById('popup-message');
+      
+      popupTitle.textContent = isSuccess ? "Success" : "Alert";
+      popupMessage.textContent = message;
+      popupMessage.style.color = isSuccess ? "green" : "red";
+      
+      popup.style.display = "flex";
+    }
+
+    // Function to close popup
+    function closePopup() {
+      document.getElementById('popup').style.display = "none";
+    }
+
+    // Function to redirect to login page
+    function redirectToLogin() {
+      window.location.href = 'fingerPrint.html';
+    }
+
+    // Function to check prescription content
+    function checkPrescription(fileContent) {
+      // Simulate checking the prescription content
+      // In a real application, this would involve actual PDF parsing
+      
+      // For demo purposes, we'll randomly decide if it's good or bad health
+      // with a bias toward good health (70% chance)
+      const isGoodHealth = Math.random() < 0.7;
+      
+      if (isGoodHealth) {
+        currentUser.prescriptionApproved = true;
+        document.getElementById('prescription-status').textContent = "Prescription Approved";
+        document.getElementById('prescription-status').className = "prescription-status approved";
+        showPopup("Medical prescription verified. You are approved for alcohol purchase.", true);
+      } else {
+        currentUser.prescriptionApproved = false;
+        document.getElementById('prescription-status').textContent = "Prescription Rejected - Health Concerns";
+        document.getElementById('prescription-status').className = "prescription-status rejected";
+        showPopup("Medical prescription indicates health concerns. Alcohol purchase not recommended.");
+      }
+      
+      // Update status messages
+      updateStatusMessages();
+    }
+
+    // Add event listener for prescription file upload
+    document.getElementById('prescription-file').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        // In a real application, you would parse the PDF here
+        // For this demo, we'll simulate reading the file
+        
+        // Create a fake FileReader result
+        setTimeout(() => {
+          // Randomly select content from good or bad health samples
+          const isGoodHealth = Math.random() < 0.7; // 70% chance of good health
+          const contentSample = isGoodHealth ? 
+            prescriptionContents.goodHealth : 
+            prescriptionContents.badHealth;
+          
+          // Simulate file content
+          const fakeContent = contentSample.join("\n");
+          
+          // Process the "content"
+          checkPrescription(fakeContent);
+        }, 1000); // Simulate a delay for file reading
+      }
+    });
+
+    // Add event listener for month select change
+    document.getElementById('month-select').addEventListener('change', updateStatusMessages);
+
+    // Initialize the page
+    initPage();
+  </script>
+</body>
+</html>
