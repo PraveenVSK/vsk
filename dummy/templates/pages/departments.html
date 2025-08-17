@@ -1,0 +1,2003 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .departments-hero {
+        background: linear-gradient(135deg, #1a3a6c 0%, #2c5282 100%);
+        color: white;
+        padding: 120px 0;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .departments-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('https://panimalar.ac.in/assets/images/btech-aiml/aiml1.jpg') center/cover;
+        opacity: 0.15;
+    }
+    
+    .departments-hero-content {
+        position: relative;
+        z-index: 2;
+    }
+    
+    .departments-hero h1 {
+        font-size: 4rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        animation: zoomIn 1s ease-out;
+    }
+    
+    .departments-hero p {
+        font-size: 1.5rem;
+        margin-bottom: 40px;
+        animation: fadeInUp 1s ease-out 0.3s both;
+    }
+    
+    .departments-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 80px 0;
+    }
+    
+    .department-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        transition: all 0.4s ease;
+        cursor: pointer;
+        position: relative;
+    }
+    
+    .department-card:hover {
+        transform: translateY(-15px) scale(1.03);
+        box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+    }
+    
+    .department-header {
+        padding: 30px;
+        text-align: center;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        position: relative;
+    }
+    
+    .dept-icon {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: white;
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+    }
+    
+    .aids-card .dept-icon {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
+    }
+    
+    .department-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a3a6c;
+        margin-bottom: 10px;
+    }
+    
+    .department-subtitle {
+        color: #6b7280;
+        font-size: 1rem;
+    }
+    
+    .department-body {
+        padding: 30px;
+    }
+    
+    .department-features {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 20px;
+    }
+    
+    .department-features li {
+        padding: 8px 0;
+        display: flex;
+        align-items: center;
+        font-size: 0.95rem;
+        color: #4a5568;
+    }
+    
+    .department-features li i {
+        color: #10b981;
+        margin-right: 12px;
+        font-size: 1rem;
+    }
+    
+    .explore-btn {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .aids-card .explore-btn {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+    }
+    
+    .explore-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    
+    .aids-showcase {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.9);
+        z-index: 1000;
+        overflow-y: auto;
+        animation: fadeIn 0.5s ease-out;
+    }
+    
+    .showcase-content {
+        max-width: 1200px;
+        margin: 50px auto;
+        background: white;
+        border-radius: 20px;
+        position: relative;
+    }
+    
+    .close-btn {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        background: #ef4444;
+        color: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.2rem;
+        z-index: 1001;
+    }
+    
+    .showcase-header {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: white;
+        padding: 60px 40px;
+        text-align: center;
+        border-radius: 20px 20px 0 0;
+    }
+    
+    .showcase-header h2 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+    
+    .showcase-header p {
+        font-size: 1.3rem;
+        margin-bottom: 30px;
+    }
+    
+    .highlight-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        margin-top: 40px;
+    }
+    
+    .highlight-stat {
+        text-align: center;
+        padding: 20px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+    }
+    
+    .highlight-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        display: block;
+        margin-bottom: 10px;
+    }
+    
+    .highlight-label {
+        font-size: 1rem;
+    }
+    
+    .showcase-body {
+        padding: 60px 40px;
+    }
+    
+    .showcase-section {
+        margin-bottom: 60px;
+    }
+    
+    .showcase-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1a3a6c;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    
+    .hod-showcase {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 40px;
+        align-items: center;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+    
+    .hod-image-container {
+        position: relative;
+    }
+    
+    .hod-image {
+        width: 250px;
+        height: 250px;
+        border-radius: 50%;
+        border: 8px solid #f59e0b;
+        box-shadow: 0 0 40px rgba(245, 158, 11, 0.4);
+        overflow: hidden;
+        margin: 0 auto;
+    }
+    
+    .hod-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .hod-details h3 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1a3a6c;
+        margin-bottom: 10px;
+    }
+    
+    .hod-title {
+        font-size: 1.5rem;
+        color: #f59e0b;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+    
+    .hod-achievements {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .hod-achievements li {
+        padding: 10px 0;
+        display: flex;
+        align-items: center;
+        font-size: 1.1rem;
+        color: #4a5568;
+    }
+    
+    .hod-achievements li i {
+        color: #10b981;
+        margin-right: 15px;
+        font-size: 1.2rem;
+    }
+    
+    .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin-top: 30px;
+    }
+    
+    .team-member {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        text-align: center;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    
+    .team-member:hover {
+        transform: translateY(-10px);
+    }
+    
+    .member-image {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 4px solid #10b981;
+        margin: 0 auto 20px;
+        overflow: hidden;
+    }
+    
+    .member-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .member-name {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #1a3a6c;
+        margin-bottom: 5px;
+    }
+    
+    .member-role {
+        color: #10b981;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+    
+    .labs-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 30px;
+    }
+    
+    .lab-card {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    
+    .lab-card:hover {
+        transform: scale(1.05);
+    }
+    
+    .lab-image {
+        height: 200px;
+        overflow: hidden;
+    }
+    
+    .lab-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    
+    .lab-card:hover .lab-image img {
+        transform: scale(1.1);
+    }
+    
+    .lab-info {
+        padding: 25px;
+        background: white;
+    }
+    
+    .lab-name {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #1a3a6c;
+        margin-bottom: 10px;
+    }
+    
+    .lab-description {
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+    
+    .achievement-highlight {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        padding: 40px;
+        border-radius: 20px;
+        text-align: center;
+        margin: 40px 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .achievement-highlight::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: sparkle 3s infinite;
+    }
+    
+    .achievement-content {
+        position: relative;
+        z-index: 2;
+    }
+    
+    .achievement-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+    
+    .achievement-subtitle {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+        opacity: 0.9;
+    }
+    
+    .company-logo {
+        font-size: 3rem;
+        margin-bottom: 10px;
+    }
+
+    /* Achievements Section Styles */
+    .achievements-section {
+        padding: 100px 0;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        position: relative;
+    }
+    
+    .achievements-header {
+        text-align: center;
+        margin-bottom: 60px;
+    }
+    
+    .achievements-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: #1a3a6c;
+        margin-bottom: 20px;
+    }
+    
+    .achievements-subtitle {
+        font-size: 1.3rem;
+        color: #6b7280;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .achievements-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 60px;
+        flex-wrap: wrap;
+    }
+    
+    .tab-btn {
+        padding: 15px 30px;
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 50px;
+        font-weight: 600;
+        color: #6b7280;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1rem;
+    }
+    
+    .tab-btn:hover {
+        border-color: #3b82f6;
+        color: #3b82f6;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(59, 130, 246, 0.2);
+    }
+    
+    .tab-btn.active {
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        border-color: #3b82f6;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+    }
+    
+    .tab-content {
+        display: none;
+        animation: fadeInUp 0.5s ease-out;
+    }
+    
+    .tab-content.active {
+        display: block;
+    }
+    
+    /* Projects Tab Styles */
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    .project-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        transition: all 0.4s ease;
+        cursor: pointer;
+    }
+    
+    .project-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+    }
+    
+    .project-image {
+        position: relative;
+        height: 200px;
+        overflow: hidden;
+    }
+    
+    .project-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+    
+    .project-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(59, 130, 246, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .project-overlay i {
+        font-size: 2rem;
+        color: white;
+    }
+    
+    .project-info {
+        padding: 25px;
+    }
+    
+    .project-category {
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 15px;
+    }
+    
+    .project-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #1a3a6c;
+        margin-bottom: 10px;
+    }
+    
+    .project-description {
+        color: #6b7280;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    
+    .project-tech {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+    
+    .tech-tag {
+        background: #f1f5f9;
+        color: #475569;
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+    
+    .project-stats {
+        border-top: 1px solid #e2e8f0;
+        padding-top: 15px;
+    }
+    
+    .project-stats .stat {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #10b981;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+    
+    /* Publications Tab Styles */
+    .publications-grid {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .publication-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        border-left: 5px solid #3b82f6;
+    }
+    
+    .publication-card:hover {
+        transform: translateX(10px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    }
+    
+    .publication-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .journal-badge {
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        color: white;
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+    
+    .impact-factor {
+        background: #10b981;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 15px;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+    
+    .publication-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #1a3a6c;
+        margin-bottom: 15px;
+        line-height: 1.4;
+    }
+    
+    .publication-authors {
+        margin-bottom: 20px;
+        font-size: 1rem;
+        color: #6b7280;
+    }
+    
+    .author {
+        font-weight: 600;
+        color: #3b82f6;
+    }
+    
+    .publication-details {
+        display: flex;
+        gap: 25px;
+        flex-wrap: wrap;
+    }
+    
+    .publication-details .detail {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #6b7280;
+        font-size: 0.9rem;
+    }
+    
+    .publication-details .detail i {
+        color: #10b981;
+    }
+    
+    .research-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 30px;
+        margin-top: 50px;
+    }
+    
+    .stat-card {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-10px);
+    }
+    
+    .stat-card .stat-icon {
+        font-size: 3rem;
+        color: #3b82f6;
+        margin-bottom: 15px;
+    }
+    
+    .stat-card .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1a3a6c;
+        display: block;
+        margin-bottom: 10px;
+    }
+    
+    .stat-card .stat-label {
+        color: #6b7280;
+        font-weight: 600;
+    }
+    
+    /* Industry Tab Styles */
+    .industry-partners {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    .partners-intro {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+    
+    .partners-intro h3 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1a3a6c;
+        margin-bottom: 15px;
+    }
+    
+    .partners-intro p {
+        font-size: 1.2rem;
+        color: #6b7280;
+    }
+    
+    .partners-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 60px;
+    }
+    
+    .partner-card {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .partner-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+    }
+    
+    .tier-1::before {
+        background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+    }
+    
+    .tier-2::before {
+        background: linear-gradient(90deg, #10b981, #059669);
+    }
+    
+    .tier-3::before {
+        background: linear-gradient(90deg, #f59e0b, #d97706);
+    }
+    
+    .partner-logo {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        color: #3b82f6;
+    }
+    
+    .tier-2 .partner-logo {
+        color: #10b981;
+    }
+    
+    .tier-3 .partner-logo {
+        color: #f59e0b;
+    }
+    
+    .partner-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a3a6c;
+        margin-bottom: 10px;
+    }
+    
+    .partnership-type {
+        background: #f1f5f9;
+        color: #475569;
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+    
+    .tier-1 .partnership-type {
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        color: white;
+    }
+    
+    .tier-2 .partnership-type {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+    }
+    
+    .partnership-benefits {
+        list-style: none;
+        padding: 0;
+        text-align: left;
+    }
+    
+    .partnership-benefits li {
+        padding: 8px 0;
+        display: flex;
+        align-items: center;
+        font-size: 0.95rem;
+        color: #4a5568;
+    }
+    
+    .partnership-benefits li i {
+        color: #10b981;
+        margin-right: 12px;
+        font-size: 1rem;
+    }
+    
+    .partnership-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 30px;
+        margin-top: 50px;
+    }
+    
+    .partnership-stat {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    
+    .partnership-stat:hover {
+        transform: translateY(-10px);
+    }
+    
+    .partnership-stat .stat-icon {
+        font-size: 3rem;
+        color: #10b981;
+        margin-bottom: 15px;
+    }
+    
+    .partnership-stat .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1a3a6c;
+        display: block;
+        margin-bottom: 10px;
+    }
+    
+    .partnership-stat .stat-label {
+        color: #6b7280;
+        font-weight: 600;
+    }
+    
+    /* Enhanced Features Section */
+    .enhanced-features {
+        padding: 100px 0;
+        background: linear-gradient(135deg, #1a3a6c 0%, #2c5282 100%);
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .enhanced-features::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23ffffff" stroke-width="0.5" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        opacity: 0.3;
+    }
+    
+    .features-header {
+        text-align: center;
+        margin-bottom: 60px;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .features-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .features-subtitle {
+        font-size: 1.3rem;
+        opacity: 0.9;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .feature-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 40px 30px;
+        text-align: center;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transform: rotate(45deg);
+        transition: all 0.6s ease;
+        opacity: 0;
+    }
+    
+    .feature-card:hover::before {
+        animation: shimmer 1.5s ease-in-out;
+        opacity: 1;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        background: rgba(255, 255, 255, 0.15);
+    }
+    
+    .feature-icon {
+        font-size: 4rem;
+        color: #fbbf24;
+        margin-bottom: 25px;
+        text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+    }
+    
+    .feature-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: white;
+    }
+    
+    .feature-description {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 25px;
+        opacity: 0.9;
+    }
+    
+    .feature-stats {
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .feature-stat {
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        color: #1a3a6c;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        display: inline-block;
+    }
+    
+    @keyframes zoomIn {
+        from {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes sparkle {
+        0%, 100% { transform: rotate(0deg) translate(-50%, -50%); }
+        50% { transform: rotate(180deg) translate(-50%, -50%); }
+    }
+    
+    @keyframes shimmer {
+        0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+        100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+    
+    @media (max-width: 768px) {
+        .departments-hero h1 { font-size: 2.5rem; }
+        .hod-showcase { grid-template-columns: 1fr; text-align: center; }
+        .highlight-stats { grid-template-columns: 1fr; }
+        .showcase-content { margin: 20px; }
+        .showcase-body { padding: 40px 20px; }
+        .achievements-title { font-size: 2.5rem; }
+        .features-title { font-size: 2.5rem; }
+        .achievements-tabs { flex-direction: column; align-items: center; }
+        .projects-grid { grid-template-columns: 1fr; }
+        .partners-grid { grid-template-columns: 1fr; }
+        .features-grid { grid-template-columns: 1fr; }
+        .publication-details { flex-direction: column; gap: 10px; }
+        .research-stats { grid-template-columns: 1fr; }
+        .partnership-stats { grid-template-columns: repeat(2, 1fr); }
+    }
+</style>
+
+<section class="departments-hero">
+    <div class="container">
+        <div class="departments-hero-content">
+            <h1>Our Departments</h1>
+            <p>Excellence Across Engineering Disciplines</p>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="departments-grid">
+        <div class="department-card aids-card" onclick="showAIDSShowcase()">
+            <div class="department-header">
+                <div class="dept-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3 class="department-name">Artificial Intelligence & Data Science</h3>
+                <p class="department-subtitle">Future of Technology</p>
+            </div>
+            <div class="department-body">
+                <ul class="department-features">
+                    <li><i class="fas fa-check"></i>Machine Learning & Deep Learning</li>
+                    <li><i class="fas fa-check"></i>Big Data Analytics</li>
+                    <li><i class="fas fa-check"></i>Computer Vision & NLP</li>
+                    <li><i class="fas fa-check"></i>Highest Package: 27 LPA</li>
+                </ul>
+                <button class="explore-btn">Explore Department</button>
+            </div>
+        </div>
+        
+        <div class="department-card">
+            <div class="department-header">
+                <div class="dept-icon">
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+                <h3 class="department-name">Computer Science Engineering</h3>
+                <p class="department-subtitle">Software Innovation</p>
+            </div>
+            <div class="department-body">
+                <ul class="department-features">
+                    <li><i class="fas fa-check"></i>Software Development</li>
+                    <li><i class="fas fa-check"></i>Web Technologies</li>
+                    <li><i class="fas fa-check"></i>Mobile App Development</li>
+                    <li><i class="fas fa-check"></i>Cloud Computing</li>
+                </ul>
+                <button class="explore-btn">Explore Department</button>
+            </div>
+        </div>
+        
+        <div class="department-card">
+            <div class="department-header">
+                <div class="dept-icon">
+                    <i class="fas fa-broadcast-tower"></i>
+                </div>
+                <h3 class="department-name">Electronics & Communication</h3>
+                <p class="department-subtitle">Communication Systems</p>
+            </div>
+            <div class="department-body">
+                <ul class="department-features">
+                    <li><i class="fas fa-check"></i>Digital Signal Processing</li>
+                    <li><i class="fas fa-check"></i>VLSI Design</li>
+                    <li><i class="fas fa-check"></i>Embedded Systems</li>
+                    <li><i class="fas fa-check"></i>IoT Applications</li>
+                </ul>
+                <button class="explore-btn">Explore Department</button>
+            </div>
+        </div>
+        
+        <div class="department-card">
+            <div class="department-header">
+                <div class="dept-icon">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <h3 class="department-name">Mechanical Engineering</h3>
+                <p class="department-subtitle">Industrial Innovation</p>
+            </div>
+            <div class="department-body">
+                <ul class="department-features">
+                    <li><i class="fas fa-check"></i>CAD/CAM Design</li>
+                    <li><i class="fas fa-check"></i>Manufacturing Technology</li>
+                    <li><i class="fas fa-check"></i>Thermal Engineering</li>
+                    <li><i class="fas fa-check"></i>Automation & Robotics</li>
+                </ul>
+                <button class="explore-btn">Explore Department</button>
+            </div>
+        </div>
+        
+        <div class="department-card">
+            <div class="department-header">
+                <div class="dept-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3 class="department-name">Electrical & Electronics</h3>
+                <p class="department-subtitle">Power & Energy</p>
+            </div>
+            <div class="department-body">
+                <ul class="department-features">
+                    <li><i class="fas fa-check"></i>Power Systems</li>
+                    <li><i class="fas fa-check"></i>Control Systems</li>
+                    <li><i class="fas fa-check"></i>Renewable Energy</li>
+                    <li><i class="fas fa-check"></i>Smart Grid Technology</li>
+                </ul>
+                <button class="explore-btn">Explore Department</button>
+            </div>
+        </div>
+        
+        <div class="department-card">
+            <div class="department-header">
+                <div class="dept-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 class="department-name">Computer Science & Business Systems</h3>
+                <p class="department-subtitle">Business Technology</p>
+            </div>
+            <div class="department-body">
+                <ul class="department-features">
+                    <li><i class="fas fa-check"></i>Business Analytics</li>
+                    <li><i class="fas fa-check"></i>Enterprise Systems</li>
+                    <li><i class="fas fa-check"></i>Digital Marketing</li>
+                    <li><i class="fas fa-check"></i>Financial Technology</li>
+                </ul>
+                <button class="explore-btn">Explore Department</button>
+            </div>
+        </div>
+        
+        <div class="department-card">
+            <div class="department-header">
+                <div class="dept-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3 class="department-name">Artificial Intelligence & Machine Learning</h3>
+                <p class="department-subtitle">Intelligent Systems</p>
+            </div>
+            <div class="department-body">
+                <ul class="department-features">
+                    <li><i class="fas fa-check"></i>Neural Networks</li>
+                    <li><i class="fas fa-check"></i>Pattern Recognition</li>
+                    <li><i class="fas fa-check"></i>Robotics & Automation</li>
+                    <li><i class="fas fa-check"></i>Cognitive Computing</li>
+                </ul>
+                <button class="explore-btn">Explore Department</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- AIDS Department Showcase Modal -->
+<div class="aids-showcase" id="aidsShowcase">
+    <div class="showcase-content">
+        <button class="close-btn" onclick="hideAIDSShowcase()">&times;</button>
+        
+        <div class="showcase-header">
+            <h2>Artificial Intelligence & Data Science</h2>
+            <p>Pioneering the Future of Technology and Innovation</p>
+            
+            <div class="highlight-stats">
+                <div class="highlight-stat">
+                    <span class="highlight-number">27 LPA</span>
+                    <span class="highlight-label">Highest Package</span>
+                </div>
+                <div class="highlight-stat">
+                    <span class="highlight-number">95%</span>
+                    <span class="highlight-label">Placement Rate</span>
+                </div>
+                <div class="highlight-stat">
+                    <span class="highlight-number">200+</span>
+                    <span class="highlight-label">Industry Partners</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="showcase-body">
+            <div class="showcase-section">
+                <h3 class="showcase-title">Department Head</h3>
+                <div class="hod-showcase">
+                    <div class="hod-image-container">
+                        <div class="hod-image">
+                            <img src="https://panimalar.ac.in/assets/images/AboutUs/academic-team/2.png" alt="Dr. Malathi">
+                        </div>
+                    </div>
+                    <div class="hod-details">
+                        <h3>Dr. Malathi</h3>
+                        <p class="hod-title">Head of Department - AIDS</p>
+                        <ul class="hod-achievements">
+                            <li><i class="fas fa-medal"></i>15+ Years of Academic Excellence</li>
+                            <li><i class="fas fa-book"></i>50+ Research Publications</li>
+                            <li><i class="fas fa-graduation-cap"></i>Ph.D in Artificial Intelligence</li>
+                            <li><i class="fas fa-award"></i>Multiple Research Awards</li>
+                            <li><i class="fas fa-users"></i>Expert in Machine Learning & Data Science</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="showcase-section">
+                <h3 class="showcase-title">Core Academic Team</h3>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <div class="member-image">
+                            <img src="https://panimalar.ac.in/assets/images/AboutUs/academic-team/8.png" alt="Dr. Joshi">
+                        </div>
+                        <h4 class="member-name">Dr. Joshi</h4>
+                        <p class="member-role">Core Academic Team</p>
+                        <p>Ph.D, 12+ Years Experience, 40+ Publications</p>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-image">
+                            <img src="https://via.placeholder.com/120x120/3b82f6/ffffff?text=Prof" alt="Faculty">
+                        </div>
+                        <h4 class="member-name">Prof. Rajesh Kumar</h4>
+                        <p class="member-role">Assistant Professor</p>
+                        <p>M.Tech, 8+ Years Experience</p>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-image">
+                            <img src="https://via.placeholder.com/120x120/10b981/ffffff?text=Dr" alt="Faculty">
+                        </div>
+                        <h4 class="member-name">Dr. Priya Sharma</h4>
+                        <p class="member-role">Associate Professor</p>
+                        <p>Ph.D, 10+ Years Experience</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="achievement-highlight">
+                <div class="achievement-content">
+                    <div class="company-logo">🚀</div>
+                    <h3 class="achievement-title">Record Breaking Achievement!</h3>
+                    <p class="achievement-subtitle">Our student secured the highest package of 27 LPA at Juspay</p>
+                    <p>Setting new benchmarks in AI & Data Science placements</p>
+                </div>
+            </div>
+            
+            <div class="showcase-section">
+                <h3 class="showcase-title">Our State-of-the-Art Labs</h3>
+                <div class="labs-gallery">
+                    <div class="lab-card">
+                        <div class="lab-image">
+                            <img src="https://panimalar.ac.in/assets/images/btech-aiml/aiml1.jpg" alt="AI Lab">
+                        </div>
+                        <div class="lab-info">
+                            <h4 class="lab-name">Artificial Intelligence Lab</h4>
+                            <p class="lab-description">Advanced computing facility with high-end GPUs for deep learning research and development.</p>
+                        </div>
+                    </div>
+                    <div class="lab-card">
+                        <div class="lab-image">
+                            <img src="https://panimalar.ac.in/assets/images/be-eie/achievements/e-and-i-lab-image1.jpg" alt="Data Science Lab">
+                        </div>
+                        <div class="lab-info">
+                            <h4 class="lab-name">Data Analytics Lab</h4>
+                            <p class="lab-description">Equipped with latest software tools for big data processing and statistical analysis.</p>
+                        </div>
+                    </div>
+                    <div class="lab-card">
+                        <div class="lab-image">
+                            <img src="https://content.jdmagicbox.com/v2/comp/chennai/08/044pf007508/catalogue/panimalar-engineering-college-nazarethpettai-chennai-engineering-colleges-4hs0rc2.jpg" alt="Research Lab">
+                        </div>
+                        <div class="lab-info">
+                            <h4 class="lab-name">Machine Learning Research Lab</h4>
+                            <p class="lab-description">Dedicated space for cutting-edge research in machine learning algorithms and applications.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Achievements Section -->
+<section class="achievements-section">
+    <div class="container">
+        <div class="achievements-header">
+            <h2 class="achievements-title">Our Achievements</h2>
+            <p class="achievements-subtitle">Excellence in Student Projects, Research Publications, and Industry Partnerships</p>
+        </div>
+        
+        <div class="achievements-tabs">
+            <button class="tab-btn active" onclick="showTab('projects')">
+                <i class="fas fa-project-diagram"></i>
+                Student Projects
+            </button>
+            <button class="tab-btn" onclick="showTab('publications')">
+                <i class="fas fa-book-open"></i>
+                Publications
+            </button>
+            <button class="tab-btn" onclick="showTab('industry')">
+                <i class="fas fa-handshake"></i>
+                Industry Tie-ups
+            </button>
+        </div>
+        
+        <div class="tab-content active" id="projects">
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg" alt="AI Healthcare Project">
+                        <div class="project-overlay">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-category">AI & Healthcare</div>
+                        <h3 class="project-title">Smart Disease Prediction System</h3>
+                        <p class="project-description">AI-powered system for early disease detection using machine learning algorithms and medical imaging.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">TensorFlow</span>
+                            <span class="tech-tag">OpenCV</span>
+                        </div>
+                        <div class="project-stats">
+                            <div class="stat">
+                                <i class="fas fa-trophy"></i>
+                                <span>1st Prize - State Level</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg" alt="IoT Smart City">
+                        <div class="project-overlay">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-category">IoT & Smart Systems</div>
+                        <h3 class="project-title">Smart City Traffic Management</h3>
+                        <p class="project-description">IoT-based intelligent traffic management system with real-time monitoring and optimization.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Arduino</span>
+                            <span class="tech-tag">Raspberry Pi</span>
+                            <span class="tech-tag">Node.js</span>
+                        </div>
+                        <div class="project-stats">
+                            <div class="stat">
+                                <i class="fas fa-medal"></i>
+                                <span>Best Innovation Award</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://images.pexels.com/photos/3861458/pexels-photo-3861458.jpeg" alt="Blockchain Project">
+                        <div class="project-overlay">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-category">Blockchain & Security</div>
+                        <h3 class="project-title">Secure Voting System</h3>
+                        <p class="project-description">Blockchain-based secure and transparent voting system for democratic processes.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Solidity</span>
+                            <span class="tech-tag">Web3.js</span>
+                            <span class="tech-tag">React</span>
+                        </div>
+                        <div class="project-stats">
+                            <div class="stat">
+                                <i class="fas fa-star"></i>
+                                <span>Published in IEEE</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://images.pexels.com/photos/8386434/pexels-photo-8386434.jpeg" alt="Robotics Project">
+                        <div class="project-overlay">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-category">Robotics & Automation</div>
+                        <h3 class="project-title">Autonomous Delivery Robot</h3>
+                        <p class="project-description">AI-powered autonomous robot for contactless delivery with obstacle avoidance and path planning.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">ROS</span>
+                            <span class="tech-tag">Computer Vision</span>
+                            <span class="tech-tag">SLAM</span>
+                        </div>
+                        <div class="project-stats">
+                            <div class="stat">
+                                <i class="fas fa-rocket"></i>
+                                <span>Startup Incubated</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="publications">
+            <div class="publications-grid">
+                <div class="publication-card">
+                    <div class="publication-header">
+                        <div class="journal-badge">IEEE</div>
+                        <div class="impact-factor">IF: 4.2</div>
+                    </div>
+                    <h3 class="publication-title">Deep Learning Approaches for Medical Image Analysis in COVID-19 Detection</h3>
+                    <div class="publication-authors">
+                        <span class="author">Dr. Malathi</span>, 
+                        <span class="author">Dr. Joshi</span>, 
+                        <span class="author">Student Co-authors</span>
+                    </div>
+                    <div class="publication-details">
+                        <div class="detail">
+                            <i class="fas fa-calendar"></i>
+                            <span>2024</span>
+                        </div>
+                        <div class="detail">
+                            <i class="fas fa-quote-left"></i>
+                            <span>127 Citations</span>
+                        </div>
+                        <div class="detail">
+                            <i class="fas fa-download"></i>
+                            <span>2.3K Downloads</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="publication-card">
+                    <div class="publication-header">
+                        <div class="journal-badge">Springer</div>
+                        <div class="impact-factor">IF: 3.8</div>
+                    </div>
+                    <h3 class="publication-title">Machine Learning Algorithms for Predictive Analytics in Smart Manufacturing</h3>
+                    <div class="publication-authors">
+                        <span class="author">Prof. Rajesh Kumar</span>, 
+                        <span class="author">Dr. Priya Sharma</span>
+                    </div>
+                    <div class="publication-details">
+                        <div class="detail">
+                            <i class="fas fa-calendar"></i>
+                            <span>2023</span>
+                        </div>
+                        <div class="detail">
+                            <i class="fas fa-quote-left"></i>
+                            <span>89 Citations</span>
+                        </div>
+                        <div class="detail">
+                            <i class="fas fa-download"></i>
+                            <span>1.8K Downloads</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="publication-card">
+                    <div class="publication-header">
+                        <div class="journal-badge">ACM</div>
+                        <div class="impact-factor">IF: 5.1</div>
+                    </div>
+                    <h3 class="publication-title">Blockchain-based Secure Data Sharing Framework for IoT Applications</h3>
+                    <div class="publication-authors">
+                        <span class="author">Dr. Malathi</span>, 
+                        <span class="author">Research Team</span>
+                    </div>
+                    <div class="publication-details">
+                        <div class="detail">
+                            <i class="fas fa-calendar"></i>
+                            <span>2024</span>
+                        </div>
+                        <div class="detail">
+                            <i class="fas fa-quote-left"></i>
+                            <span>156 Citations</span>
+                        </div>
+                        <div class="detail">
+                            <i class="fas fa-download"></i>
+                            <span>3.1K Downloads</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="research-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="stat-number">150+</div>
+                        <div class="stat-label">Research Papers</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <div class="stat-number">2500+</div>
+                        <div class="stat-label">Total Citations</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <div class="stat-number">25+</div>
+                        <div class="stat-label">Research Awards</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="industry">
+            <div class="industry-partners">
+                <div class="partners-intro">
+                    <h3>Our Industry Partners</h3>
+                    <p>Collaborating with leading companies to provide real-world experience and career opportunities</p>
+                </div>
+                
+                <div class="partners-grid">
+                    <div class="partner-card tier-1">
+                        <div class="partner-logo">
+                            <i class="fab fa-google"></i>
+                        </div>
+                        <h4 class="partner-name">Google</h4>
+                        <div class="partnership-type">Premium Partner</div>
+                        <ul class="partnership-benefits">
+                            <li><i class="fas fa-check"></i>Cloud Credits Program</li>
+                            <li><i class="fas fa-check"></i>Guest Lectures</li>
+                            <li><i class="fas fa-check"></i>Internship Opportunities</li>
+                            <li><i class="fas fa-check"></i>Certification Programs</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="partner-card tier-1">
+                        <div class="partner-logo">
+                            <i class="fab fa-microsoft"></i>
+                        </div>
+                        <h4 class="partner-name">Microsoft</h4>
+                        <div class="partnership-type">Premium Partner</div>
+                        <ul class="partnership-benefits">
+                            <li><i class="fas fa-check"></i>Azure for Students</li>
+                            <li><i class="fas fa-check"></i>Technical Workshops</li>
+                            <li><i class="fas fa-check"></i>Campus Recruitment</li>
+                            <li><i class="fas fa-check"></i>Research Collaboration</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="partner-card tier-2">
+                        <div class="partner-logo">
+                            <i class="fab fa-amazon"></i>
+                        </div>
+                        <h4 class="partner-name">Amazon</h4>
+                        <div class="partnership-type">Strategic Partner</div>
+                        <ul class="partnership-benefits">
+                            <li><i class="fas fa-check"></i>AWS Academy</li>
+                            <li><i class="fas fa-check"></i>Industry Projects</li>
+                            <li><i class="fas fa-check"></i>Placement Drives</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="partner-card tier-2">
+                        <div class="partner-logo">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <h4 class="partner-name">TCS</h4>
+                        <div class="partnership-type">Strategic Partner</div>
+                        <ul class="partnership-benefits">
+                            <li><i class="fas fa-check"></i>Training Programs</li>
+                            <li><i class="fas fa-check"></i>Skill Development</li>
+                            <li><i class="fas fa-check"></i>Mass Recruitment</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="partner-card tier-2">
+                        <div class="partner-logo">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h4 class="partner-name">Juspay</h4>
+                        <div class="partnership-type">Strategic Partner</div>
+                        <ul class="partnership-benefits">
+                            <li><i class="fas fa-check"></i>Premium Packages</li>
+                            <li><i class="fas fa-check"></i>Technical Challenges</li>
+                            <li><i class="fas fa-check"></i>Innovation Labs</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="partner-card tier-3">
+                        <div class="partner-logo">
+                            <i class="fab fa-python"></i>
+                        </div>
+                        <h4 class="partner-name">Infosys</h4>
+                        <div class="partnership-type">Recruitment Partner</div>
+                        <ul class="partnership-benefits">
+                            <li><i class="fas fa-check"></i>Campus Hiring</li>
+                            <li><i class="fas fa-check"></i>Training Support</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="partnership-stats">
+                    <div class="partnership-stat">
+                        <div class="stat-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Industry Partners</div>
+                    </div>
+                    <div class="partnership-stat">
+                        <div class="stat-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Job Placements</div>
+                    </div>
+                    <div class="partnership-stat">
+                        <div class="stat-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="stat-number">1000+</div>
+                        <div class="stat-label">Internships</div>
+                    </div>
+                    <div class="partnership-stat">
+                        <div class="stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-number">27 LPA</div>
+                        <div class="stat-label">Highest Package</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Enhanced Features Section -->
+<section class="enhanced-features">
+    <div class="container">
+        <div class="features-header">
+            <h2 class="features-title">Why Choose Our Departments?</h2>
+            <p class="features-subtitle">Discover what makes our engineering programs exceptional</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-microscope"></i>
+                </div>
+                <h3 class="feature-title">Cutting-Edge Research</h3>
+                <p class="feature-description">State-of-the-art laboratories and research facilities with latest equipment and technology.</p>
+                <div class="feature-stats">
+                    <span class="feature-stat">50+ Research Projects</span>
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-users-cog"></i>
+                </div>
+                <h3 class="feature-title">Expert Faculty</h3>
+                <p class="feature-description">Highly qualified faculty members with industry experience and research expertise.</p>
+                <div class="feature-stats">
+                    <span class="feature-stat">90% Ph.D Holders</span>
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <h3 class="feature-title">Industry Connect</h3>
+                <p class="feature-description">Strong industry partnerships providing internships, projects, and placement opportunities.</p>
+                <div class="feature-stats">
+                    <span class="feature-stat">95% Placement Rate</span>
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <h3 class="feature-title">Global Exposure</h3>
+                <p class="feature-description">International collaborations, exchange programs, and global certification opportunities.</p>
+                <div class="feature-stats">
+                    <span class="feature-stat">20+ Global Partners</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function showAIDSShowcase() {
+        document.getElementById('aidsShowcase').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        
+        // Animate stats
+        setTimeout(() => {
+            animateShowcaseStats();
+        }, 500);
+    }
+    
+    function hideAIDSShowcase() {
+        document.getElementById('aidsShowcase').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+    
+    function animateShowcaseStats() {
+        const stats = [
+            { element: document.querySelector('.highlight-stats .highlight-number'), target: 27 },
+            { element: document.querySelectorAll('.highlight-stats .highlight-number')[1], target: 95 },
+            { element: document.querySelectorAll('.highlight-stats .highlight-number')[2], target: 200 }
+        ];
+        
+        stats.forEach((stat, index) => {
+            if (stat.element) {
+                setTimeout(() => {
+                    animateCounter(stat.element, stat.target, index === 0 ? ' LPA' : index === 1 ? '%' : '+');
+                }, index * 200);
+            }
+        });
+    }
+    
+    function animateCounter(element, target, suffix = '') {
+        let current = 0;
+        const increment = target / 50;
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                current = target;
+                clearInterval(timer);
+            }
+            element.textContent = Math.floor(current) + suffix;
+        }, 40);
+    }
+    
+    // Close modal when clicking outside
+    document.getElementById('aidsShowcase').addEventListener('click', function(e) {
+        if (e.target === this) {
+            hideAIDSShowcase();
+        }
+    });
+    
+    // Intersection Observer for department cards animation
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.animation = 'fadeInUp 0.8s ease-out forwards';
+                entry.target.style.opacity = '1';
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+    
+    // Observe all department cards
+    document.querySelectorAll('.department-card').forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.animationDelay = `${index * 0.1}s`;
+        observer.observe(card);
+    });
+    
+    // Add hover effects to department cards
+    document.querySelectorAll('.department-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-15px) scale(1.03)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+    
+    // Keyboard accessibility for modal
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            hideAIDSShowcase();
+        }
+    });
+    
+    // Achievements Tab Functionality
+    function showTab(tabName) {
+        // Hide all tab contents
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        
+        // Remove active class from all tab buttons
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        // Show selected tab content
+        document.getElementById(tabName).classList.add('active');
+        
+        // Add active class to clicked button
+        event.target.classList.add('active');
+        
+        // Animate tab content
+        const activeContent = document.getElementById(tabName);
+        activeContent.style.opacity = '0';
+        activeContent.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            activeContent.style.transition = 'all 0.5s ease';
+            activeContent.style.opacity = '1';
+            activeContent.style.transform = 'translateY(0)';
+        }, 50);
+    }
+    
+    // Enhanced Intersection Observer for new sections
+    const enhancedObserver = new IntersectionObserver(function(entries) {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }, index * 100);
+                enhancedObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    // Observe achievement cards
+    document.querySelectorAll('.project-card, .publication-card, .partner-card, .feature-card').forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'all 0.6s ease';
+        enhancedObserver.observe(card);
+    });
+    
+    // Animate statistics when visible
+    const statsObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const statNumbers = entry.target.querySelectorAll('.stat-number');
+                statNumbers.forEach(statNumber => {
+                    const target = parseInt(statNumber.textContent.replace(/\D/g, ''));
+                    if (!isNaN(target)) {
+                        animateStatCounter(statNumber, target);
+                    }
+                });
+                statsObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    // Observe stats sections
+    document.querySelectorAll('.research-stats, .partnership-stats').forEach(stats => {
+        statsObserver.observe(stats);
+    });
+    
+    function animateStatCounter(element, target) {
+        const originalText = element.textContent;
+        const suffix = originalText.replace(/[\d\s]/g, '');
+        let current = 0;
+        const increment = target / 60;
+        
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                current = target;
+                clearInterval(timer);
+            }
+            element.textContent = Math.floor(current) + suffix;
+        }, 30);
+    }
+    
+    // Project card hover effects
+    document.querySelectorAll('.project-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.querySelector('.project-overlay').style.opacity = '1';
+            this.querySelector('.project-image img').style.transform = 'scale(1.1)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.querySelector('.project-overlay').style.opacity = '0';
+            this.querySelector('.project-image img').style.transform = 'scale(1)';
+        });
+    });
+    
+    // Partner card tier animations
+    document.querySelectorAll('.partner-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            if (this.classList.contains('tier-1')) {
+                this.style.transform = 'translateY(-15px) scale(1.05)';
+                this.style.boxShadow = '0 25px 50px rgba(59, 130, 246, 0.3)';
+            } else if (this.classList.contains('tier-2')) {
+                this.style.transform = 'translateY(-10px) scale(1.03)';
+                this.style.boxShadow = '0 20px 40px rgba(16, 185, 129, 0.3)';
+            } else {
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+                this.style.boxShadow = '0 15px 30px rgba(245, 158, 11, 0.3)';
+            }
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+            this.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PANIMALAR ENGINEERING COLLEGE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        :root {
+            --primary: #1a3a6c;
+            --secondary: #2c5282;
+            --accent: #f59e0b;
+            --light: #f0f7ff;
+            --dark: #0f1c30;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+        body {
+            background: linear-gradient(135deg, #f0f7ff 0%, #e6f0ff 100%);
+            min-height: 100vh;
+            color: var(--dark);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        /* Header & Navigation */
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .logo i {
+            font-size: 2.2rem;
+            color: var(--accent);
+        }
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 5px;
+        }
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .login-btn {
+            background: var(--accent);
+            color: var(--dark);
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .login-btn:hover {
+            background: #e69008;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+        }
+        /* Profile Dropdown */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        #profileDropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            min-width: 180px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            overflow: hidden;
+            z-index: 999;
+        }
+        #profileDropdown a {
+            color: var(--primary);
+            padding: 12px 20px;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s;
+            font-weight: 500;
+        }
+        #profileDropdown a:hover {
+            background: var(--accent);
+            color: var(--dark);
+        }
+        #profileDropdown a:last-child {
+            border-bottom: none;
+        }
+        /* Page Content */
+        .page {
+            padding: 40px 0;
+        }
+        /* Home Page */
+        .hero {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            padding: 60px 0;
+        }
+        .hero-content {
+            flex: 1;
+        }
+        .hero h2 {
+            font-size: 2.8rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        .hero p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: var(--secondary);
+            line-height: 1.7;
+        }
+        .hero-image {
+            flex: 1;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        .hero-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+        .feature-card i {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 60px;
+        }
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .footer-section h3 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+        .footer-section p {
+            line-height: 1.7;
+            color: #cbd5e0;
+        }
+        .footer-links {
+            list-style: none;
+        }
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        .footer-links a {
+            color: #cbd5e0;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #2d3748;
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .nav-links {
+                gap: 15px;
+            }
+            .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+            .hero h2 {
+                font-size: 2.2rem;
+            }
+        }
+        /* Flash message styling */
+        .flash-container {
+            margin: 30px auto 0;
+            max-width: 600px;
+        }
+        .alert {
+            padding: 14px 18px;
+            background: #ffeeba;
+            color: #856404;
+            border-radius: 7px;
+            margin-bottom: 12px;
+            border: 1px solid #ffeeba;
+            font-size: 1rem;
+        }
+        /* Login & Forms Polishing (add to your base.html <style>) */
+.login-container {
+    max-width: 430px;
+    margin: 60px auto 80px;
+    background: white;
+    border-radius: 17px;
+    overflow: hidden;
+    box-shadow: 0 18px 36px rgba(0,0,0,0.14);
+}
+.login-header {
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    color: white;
+    text-align: center;
+    padding: 36px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+.login-body {
+    padding: 38px 35px 32px 35px;
+}
+.form-group {
+    margin-bottom: 27px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--secondary); 
+    font-size: 1rem;
+}
+.form-control {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s;
+    background: #f8fbff;
+}
+.form-control:focus {
+    border-color: var(--accent);
+    outline: none;
+    background: #fffde7;
+}
+.submit-btn {
+    background: var(--accent);
+    color: var(--dark);
+    border: none;
+    padding: 14px 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 30px;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s;
+    margin-top: 3px;
+    box-shadow: 0 3px 8px rgb(245 158 11 / 6%);
+}
+.submit-btn:hover {
+    background: #e69008;
+    transform: translateY(-2px);
+}
+.forgot-link {
+    display: block;
+    text-align: right;
+    margin-top: 10px;
+    font-size: 0.97em;
+    color: var(--secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.forgot-link:hover {
+    color: var(--accent);
+    text-decoration: underline;
+}
+
+.flash-container .alert {
+    margin-top: 0.7em;
+}
+
+@media (max-width: 520px) {
+    .login-container, .flash-container { max-width: 99vw; }
+    .login-header { padding: 19px 6px; font-size: 1.2em; }
+    .login-body { padding: 18px 10px 20px 10px; }
+}
+.admin-section-card,
+.table-container,
+.profile-card {
+    max-width: 1000px; /* or whatever max width your content should have */
+    margin: 0 auto; /* centers horizontally */
+}
+.admin-dashboard-actions {
+    justify-content: center;
+}
+
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h1>PANIMALAR ENGINEERING COLLEGE</h1>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="{{ url_for('main.home') }}">Home</a></li>
+                    <li><a href="{{ url_for('main.about') }}">About</a></li>
+                    <li><a href="{{ url_for('main.academics') }}">Academics</a></li>
+                    <li><a href="{{ url_for('main.departments') }}">Departments</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+                <div class="dropdown" style="position: relative;">
+                    <i class="fas fa-user-circle fa-2x" onclick="toggleDropdown()" style="cursor: pointer;"></i>
+                    <div id="profileDropdown" class="dropdown-content">
+                        <a href="#" onclick="setLoginRole('student')">Student Login</a>
+                        <a href="#" onclick="setLoginRole('faculty')">Faculty Login</a>
+                        <a href="#" onclick="setLoginRole('admin')">Admin Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-container">
+          {% for category, message in messages %}
+            <div class="alert">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}
+    {% endblock %}
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About Us</h3>
+                    <p>Panimalar Engineering College is committed to providing quality education in engineering and technology, fostering innovation, and developing future leaders.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Admissions</a></li>
+                        <li><a href="#">Programs</a></li>
+                        <li><a href="#">Research</a></li>
+                        <li><a href="#">Placements</a></li>
+                        <li><a href="#">Campus Life</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> Nazarethpet, Poonamallee, Chennai - 600123</p>
+                    <p><i class="fas fa-phone"></i> +91 44 2649 2245</p>
+                    <p><i class="fas fa-envelope"></i> info@panimalar.edu.in</p>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 PANIMALAR ENGINEERING COLLEGE. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+    <script>
+        // Profile Dropdown JS
+        function toggleDropdown() {
+            const menu = document.getElementById("profileDropdown");
+            if (menu.style.display === "block") {
+                menu.style.display = "none";
+            } else {
+                menu.style.display = "block";
+            }
+        }
+        window.onclick = function(event) {
+            if (!event.target.matches('.fa-user-circle')) {
+                var dropdown = document.getElementById("profileDropdown");
+                if (dropdown && dropdown.style.display === "block") {
+                    dropdown.style.display = "none";
+                }
+            }
+        };
+        function setLoginRole(role) {
+            localStorage.setItem('login_role', role);
+            window.location.href = "{{ url_for('auth.login') }}";
+        }
+    </script>
+</body>
+</html>
